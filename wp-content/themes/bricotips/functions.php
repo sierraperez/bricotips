@@ -83,14 +83,39 @@ add_filter('the_title', 'the_title_filter');
 
 
 add_filter('get_the_archive_title', function ($title) {
-    if (is_category()) {
+    if (is_category()) {//quem cuida da exibição das categorias.
         $title = "Liste des " . strtolower(single_cat_title('', false));
     }
     return $title;
 });
 
-function  the_category_filter( $categories ) {
+function  the_category_filter( $categories ) {//
      // Substitui "Outils" por "Tous les outils" nos nomes das categorias
     return str_replace( 'Outils', 'Tous les outils', $categories );
 }
 add_filter( 'the_category', 'the_category_filter' );
+ 
+
+function the_content_filter($content)
+{
+    if (is_single() && in_category('outils')) { //vérifie si la page courante est une page d’article
+        return '<hr><h2>Description</h2>' . $content;
+    }
+    return $content;
+}
+// Adiciona o link "En savoir plus sur l'outil" ao final do resumo
+add_filter('the_content', 'the_content_filter');
+
+
+function the_excerpt_filter($content)
+{
+   if (is_archive()) {  //Elle s’assure que l’on soit bien sur une page d’archive
+               return $content."<div class='more-excerpt'><a href='".get_the_permalink()."'>En savoir plus sur l'outil</a></div>";
+   }
+   return $content;
+}
+
+add_filter('the_excerpt', 'the_excerpt_filter');
+
+/* HOOK ACTION */
+ 
