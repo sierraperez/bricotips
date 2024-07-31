@@ -156,3 +156,10 @@ function paginate_links_filter($r) {
 }
 
 add_filter('paginate_links_output', 'paginate_links_filter', 10, 2);
+// Modo manutencao
+function maintenace_mode() {
+    if ( !current_user_can( 'administrator' ) ) {
+        wp_die('Maintenance , we will be back soon.');
+    }
+}
+add_action('get_header', 'maintenace_mode');
