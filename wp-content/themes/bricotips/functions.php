@@ -118,4 +118,41 @@ function the_excerpt_filter($content)
 add_filter('the_excerpt', 'the_excerpt_filter');
 
 /* HOOK ACTION */
- 
+function loop_end_action()
+{
+    if (is_archive()):
+        ?>
+        <p class="after-loop">
+            <?php
+                echo do_shortcode('[banniere-titre src="http://localhost/bricotips/wp-content/uploads/2024/07/banniere-image.webp" titre="BricoTips"]');
+            ?>
+        </p>
+        <?php
+   endif;
+}
+
+add_action('loop_end', 'loop_end_action');
+
+$shown = false;
+function bricotips_intro_section_action()
+{
+    global $shown;
+    if (is_archive() && !$shown):
+        ?>
+        <p class="intro">Vous trouverez dans cette page la liste de tous les outils que nous avons référencée pour le
+            moment. La liste n'est pas exhaustive, mais s'enrichira au fur et à mesure.</p>
+    <?php
+        $shown = true;
+    endif;
+}
+
+add_action('bricotips_intro_section', 'bricotips_intro_section_action');
+
+// Adiciona o filtro para modificar a saída da paginação
+
+
+function paginate_links_filter($r) {
+    return "Pages " . $r;
+}
+
+add_filter('paginate_links_output', 'paginate_links_filter', 10, 2);
